@@ -44,22 +44,10 @@
 
                 <td>{{ $inventory->merk }}</td>
 
-                <td>
 
-                    {!! DNS1D::getBarcodeHTML(
-                    $inventory->barcode,
-                    'C128',
-                    2,
-                    50
-                    ) !!}
+                <td>{{ $inventory->barcode }}</td>
 
-                    <br>
 
-                    <small>
-                        {{ $inventory->barcode }}
-                    </small>
-
-                </td>
 
                 <td>{{ $inventory->status }}</td>
 
