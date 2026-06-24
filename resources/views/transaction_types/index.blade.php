@@ -2,59 +2,107 @@
 
 @section('content')
 
-<div class="container">
+<div class="container mt-4">
 
-    <h2>Jenis Transaksi</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <a href="{{ route('transaction-types.create') }}" class="btn btn-primary mb-3">
+        <h2>
+            <i class="bi bi-arrow-left-right"></i>
+            Jenis Transaksi
+        </h2>
 
-        Tambah Jenis Transaksi
+        <a href="{{ route('transaction-types.create') }}" class="btn btn-primary">
 
-    </a>
+            <i class="bi bi-plus-circle"></i>
+            Tambah Jenis Transaksi
 
-    <table class="table table-bordered">
+        </a>
 
-        <tr>
-            <th>No</th>
-            <th>Jenis Transaksi</th>
-            <th>Aksi</th>
-        </tr>
+    </div>
 
-        @foreach($transactionTypes as $row)
+    <div class="card border-0 shadow">
 
-        <tr>
+        <div class="card-body">
 
-            <td>{{ $loop->iteration }}</td>
+            <table class="table table-hover align-middle">
 
-            <td>{{ $row->transaction_type_name }}</td>
+                <thead class="table-dark">
 
-            <td>
+                    <tr>
+                        <th width="80">No</th>
+                        <th>Jenis Transaksi</th>
+                        <th width="130">Aksi</th>
+                    </tr>
 
-                <a href="{{ route('transaction-types.edit',$row->transaction_type_id) }}" class="btn btn-warning">
+                </thead>
 
-                    Edit
+                <tbody>
 
-                </a>
+                    @forelse($transactionTypes as $row)
 
-                <form action="{{ route('transaction-types.destroy',$row->transaction_type_id) }}" method="POST"
-                    style="display:inline">
+                    <tr>
 
-                    @csrf
-                    @method('DELETE')
+                        <td>
+                            {{ $loop->iteration }}
+                        </td>
 
-                    <button class="btn btn-danger">
-                        Hapus
-                    </button>
+                        <td>
 
-                </form>
+                            <strong>
+                                {{ $row->transaction_type_name }}
+                            </strong>
 
-            </td>
+                        </td>
 
-        </tr>
+                        <td>
 
-        @endforeach
+                            <a href="{{ route('transaction-types.edit',$row->transaction_type_id) }}"
+                                class="btn btn-warning btn-sm">
 
-    </table>
+                                <i class="bi bi-pencil-square"></i>
+
+                            </a>
+
+                            <form action="{{ route('transaction-types.destroy',$row->transaction_type_id) }}"
+                                method="POST" style="display:inline">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin ingin menghapus data ini?')">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+
+                        <td colspan="3" class="text-center">
+
+                            Data jenis transaksi belum tersedia
+
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

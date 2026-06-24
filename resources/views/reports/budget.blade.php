@@ -4,47 +4,98 @@
 
 <div class="container mt-4">
 
-    <h2>Laporan Budget vs Realisasi</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <div class="alert alert-primary">
+        <h2>Laporan Budget vs Realisasi</h2>
 
-        <h4>
-            Total Budget :
-            Rp {{ number_format($totalBudget) }}
-        </h4>
-
-        <h4>
-            Total Realisasi :
-            Rp {{ number_format($totalRealization) }}
-        </h4>
+        <button onclick="window.print()" class="btn btn-danger">
+            🖨 Print PDF
+        </button>
 
     </div>
 
-    <table class="table table-bordered">
+    <div class="row mb-4">
 
-        <tr>
-            <th>No Transaksi</th>
-            <th>Budget</th>
-            <th>Realisasi</th>
-        </tr>
+        <div class="col-md-6">
 
-        @foreach($transactions as $row)
+            <div class="card border-0 shadow">
 
-        <tr>
+                <div class="card-header bg-success text-white">
+                    Total Budget
+                </div>
 
-            <td>{{ $row->transaction_number }}</td>
+                <div class="card-body">
 
-            <td>
-                Rp {{ number_format($row->total_budget) }}
-            </td>
+                    <h2 class="text-success">
+                        Rp {{ number_format($totalBudget,0,',','.') }}
+                    </h2>
 
-            <td>
-                Rp {{ number_format($row->budget_realization) }}
-            </td>
+                </div>
 
-        </tr>
+            </div>
 
-        @endforeach
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card border-0 shadow">
+
+                <div class="card-header bg-primary text-white">
+                    Total Realisasi
+                </div>
+
+                <div class="card-body">
+
+                    <h2 class="text-primary">
+                        Rp {{ number_format($totalRealization,0,',','.') }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <table class="table table-bordered table-striped">
+
+        <thead>
+
+            <tr>
+                <th>No Transaksi</th>
+                <th>Budget</th>
+                <th>Realisasi</th>
+                <th>Selisih</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @foreach($transactions as $row)
+
+            <tr>
+
+                <td>{{ $row->transaction_number }}</td>
+
+                <td>
+                    Rp {{ number_format($row->total_budget,0,',','.') }}
+                </td>
+
+                <td>
+                    Rp {{ number_format($row->budget_realization,0,',','.') }}
+                </td>
+
+                <td>
+                    Rp {{ number_format($row->total_budget - $row->budget_realization,0,',','.') }}
+                </td>
+
+            </tr>
+
+            @endforeach
+
+        </tbody>
 
     </table>
 

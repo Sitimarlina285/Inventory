@@ -4,34 +4,48 @@
 
 <div class="container mt-4">
 
-    <h2>Laporan Inventory</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <table class="table table-bordered">
+        <h2>Laporan Inventory</h2>
 
-        <tr>
-            <th>Barang</th>
-            <th>Qty</th>
-            <th>Harga</th>
-            <th>Status</th>
-        </tr>
+        <button onclick="window.print()" class="btn btn-danger">
+            🖨 Print PDF
+        </button>
 
-        @foreach($inventories as $row)
+    </div>
 
-        <tr>
+    <table class="table table-bordered table-striped">
 
-            <td>{{ $row->item->item_name }}</td>
+        <thead>
+            <tr>
+                <th>Barang</th>
+                <th>Qty</th>
+                <th>Harga</th>
+                <th>Status</th>
+            </tr>
+        </thead>
 
-            <td>{{ $row->quantity }}</td>
+        <tbody>
 
-            <td>
-                Rp {{ number_format($row->price) }}
-            </td>
+            @foreach($inventories as $row)
 
-            <td>{{ $row->status }}</td>
+            <tr>
 
-        </tr>
+                <td>{{ $row->item->item_name }}</td>
 
-        @endforeach
+                <td>{{ $row->quantity }}</td>
+
+                <td>
+                    Rp {{ number_format($row->price,0,',','.') }}
+                </td>
+
+                <td>{{ $row->status }}</td>
+
+            </tr>
+
+            @endforeach
+
+        </tbody>
 
     </table>
 

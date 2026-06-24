@@ -2,55 +2,96 @@
 
 @section('content')
 
-<div class="container">
+<div class="container mt-4">
 
-    <h2>Data Gedung</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <a href="{{ route('buildings.create') }}" class="btn btn-primary mb-3">
-        Tambah Gedung
-    </a>
+        <h2>
+            <i class="bi bi-building"></i>
+            Data Gedung
+        </h2>
 
-    <table class="table table-bordered">
+        <a href="{{ route('buildings.create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i>
+            Tambah Gedung
+        </a>
 
-        <tr>
-            <th>No</th>
-            <th>Nama Gedung</th>
-            <th>Aksi</th>
-        </tr>
+    </div>
 
-        @foreach($buildings as $building)
+    <div class="card border-0 shadow">
 
-        <tr>
+        <div class="card-body">
 
-            <td>{{ $loop->iteration }}</td>
+            <table class="table table-bordered table-striped table-hover">
 
-            <td>{{ $building->building_name }}</td>
+                <thead class="table-dark">
 
-            <td>
+                    <tr>
+                        <th width="80">No</th>
+                        <th>Nama Gedung</th>
+                        <th width="180">Aksi</th>
+                    </tr>
 
-                <a href="{{ route('buildings.edit',$building->building_id) }}" class="btn btn-warning">
-                    Edit
-                </a>
+                </thead>
 
-                <form action="{{ route('buildings.destroy',$building->building_id) }}" method="POST"
-                    style="display:inline">
+                <tbody>
 
-                    @csrf
-                    @method('DELETE')
+                    @forelse($buildings as $building)
 
-                    <button class="btn btn-danger">
-                        Hapus
-                    </button>
+                    <tr>
 
-                </form>
+                        <td>{{ $loop->iteration }}</td>
 
-            </td>
+                        <td>
+                            {{ $building->building_name }}
+                        </td>
 
-        </tr>
+                        <td>
 
-        @endforeach
+                            <a href="{{ route('buildings.edit',$building->building_id) }}"
+                                class="btn btn-warning btn-sm">
 
-    </table>
+                                <i class="bi bi-pencil-square"></i>
+
+                            </a>
+
+                            <form action="{{ route('buildings.destroy',$building->building_id) }}" method="POST"
+                                style="display:inline">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit" class="btn btn-danger btn-sm">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+
+                        <td colspan="3" class="text-center">
+                            Data gedung belum tersedia
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

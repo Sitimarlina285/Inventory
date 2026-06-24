@@ -22,6 +22,19 @@ class InventoryController extends Controller
         );
     }
 
+public function show($id)
+{
+    $inventory = Inventory::with([
+        'item',
+        'transaction'
+    ])->findOrFail($id);
+
+    return view(
+        'inventories.show',
+        compact('inventory')
+    );
+}
+
     public function create()
     {
         $items = Item::all();
@@ -48,12 +61,12 @@ class InventoryController extends Controller
 
         $photo = null;
 
-        if($request->hasFile('photo'))
-        {
-            $photo =
-            $request->file('photo')
-            ->store('inventory','public');
-        }
+      if($request->hasFile('photo'))
+{
+    $photo =
+    $request->file('photo')
+    ->store('inventory','public');
+}
 
         Inventory::create([
 
@@ -116,45 +129,61 @@ class InventoryController extends Controller
     }
 
     public function update(
-        Request $request,
-        string $id
-    )
+    Request $request,
+    string $id
+)
+{
+    $inventory =
+        Inventory::findOrFail($id);
+
+    $photo = $inventory->photo;
+
+    if($request->hasFile('photo'))
     {
-        $inventory =
-            Inventory::findOrFail($id);
-
-        $inventory->update([
-            'item_id' =>
-                $request->item_id,
-
-            'inventory_transaction_id' =>
-                $request->inventory_transaction_id,
-
-            'quantity' =>
-                $request->quantity,
-
-            'price' =>
-                $request->price,
-
-            'specification' =>
-                $request->specification,
-
-            'status' =>
-                $request->status,
-
-            'description' =>
-                $request->description,
-
-            'merk' =>
-                $request->merk,
-
-            'expired_date' =>
-                $request->expired_date
-        ]);
-
-        return redirect()
-            ->route('inventories.index');
+        $photo =
+            $request->file('photo')
+            ->store('inventory','public');
     }
+
+    $inventory->update([
+
+        'item_id' =>
+            $request->item_id,
+
+        'inventory_transaction_id' =>
+            $request->inventory_transaction_id,
+
+        'quantity' =>
+            $request->quantity,
+
+        'price' =>
+            $request->price,
+
+        'specification' =>
+            $request->specification,
+
+        'status' =>
+            $request->status,
+
+        'photo' =>
+            $photo,
+
+        'description' =>
+            $request->description,
+
+        'merk' =>
+            $request->merk,
+
+        'expired_date' =>
+            $request->expired_date
+
+    ]);
+
+    return redirect()
+        ->route('inventories.index')
+        ->with('success',
+            'Data berhasil diupdate');
+}
 
     public function destroy($id)
 {

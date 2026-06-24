@@ -4,82 +4,183 @@
 
 <div class="container mt-4">
 
-    <h2>Data Inventory</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <a href="{{ route('inventories.create') }}" class="btn btn-primary mb-3">
-        Tambah Inventory
-    </a>
+        <h2>
+            <i class="bi bi-box-seam"></i>
+            Data Inventory
+        </h2>
 
-    <table class="table table-bordered table-striped">
+        <a href="{{ route('inventories.create') }}" class="btn btn-primary">
 
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Barang</th>
-                <th>Qty</th>
-                <th>Harga</th>
-                <th>Merk</th>
-                <th>Barcode</th>
-                <th>Status</th>
-                <th>Expired</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
+            <i class="bi bi-plus-circle"></i>
+            Tambah Inventory
 
-        <tbody>
+        </a>
 
-            @foreach($inventories as $inventory)
+    </div>
 
-            <tr>
+    <div class="card border-0 shadow">
 
-                <td>{{ $loop->iteration }}</td>
+        <div class="card-body">
 
-                <td>{{ $inventory->item->item_name }}</td>
+            <table class="table table-bordered table-striped table-hover align-middle">
 
-                <td>{{ $inventory->quantity }}</td>
+                <thead class="table-dark">
 
-                <td>
-                    Rp {{ number_format($inventory->price,0,',','.') }}
-                </td>
+                    <tr>
+                        <th>No</th>
+                        <th>Barang</th>
+                        <th>Foto</th>
+                        <th>Qty</th>
+                        <th>Harga</th>
+                        <th>Merk</th>
+                        <th>QR Code</th>
+                        <th>Status</th>
+                        <th>Expired</th>
+                        <th width="150">Aksi</th>
+                    </tr>
 
-                <td>{{ $inventory->merk }}</td>
+                </thead>
 
+                <tbody>
 
-                <td>{{ $inventory->barcode }}</td>
+                    @forelse($inventories as $inventory)
 
+                    <tr>
 
+                        <td>
+                            {{ $loop->iteration }}
+                        </td>
 
-                <td>{{ $inventory->status }}</td>
+                        <td>
+                            <strong>
+                                {{ $inventory->item->item_name }}
+                            </strong>
+                        </td>
 
-                <td>{{ $inventory->expired_date }}</td>
+                        <td class="text-center">
 
-                <td>
+                            @if($inventory->photo)
 
-                    <a href="{{ route('inventories.edit',$inventory->inventory_id) }}" class="btn btn-warning btn-sm">
-                        Edit
-                    </a>
+                            <img src="{{ asset('storage/'.$inventory->photo) }}" width="70" height="70" style="
+                                    object-fit:cover;
+                                    border-radius:10px;
+                                    border:1px solid #ddd;
+                                ">
 
-                    <form action="{{ route('inventories.destroy',$inventory->inventory_id) }}" method="POST"
-                        style="display:inline">
+                            @else
 
-                        @csrf
-                        @method('DELETE')
+                            <span class="badge bg-secondary">
+                                No Photo
+                            </span>
 
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            Hapus
-                        </button>
+                            @endif
 
-                    </form>
+                        </td>
 
-                </td>
+                        <td>
+                            {{ $inventory->quantity }}
+                        </td>
 
-            </tr>
+                        <td>
+                            Rp {{ number_format($inventory->price,0,',','.') }}
+                        </td>
 
-            @endforeach
+                        <td>
+                            {{ $inventory->merk }}
+                        </td>
 
-        </tbody>
+                        <td class="text-center">
 
-    </table>
+                            {!! QrCode::size(70)->generate(
+                            url('/inventories/'.$inventory->inventory_id)
+                            ) !!}
+
+                        </td>
+
+                        <td>
+
+                            @if($inventory->status == 'Active')
+
+                            <span class="badge bg-success">
+                                Active
+                            </span>
+
+                            @elseif($inventory->status == 'Rusak')
+
+                            <span class="badge bg-danger">
+                                Rusak
+                            </span>
+
+                            @elseif($inventory->status == 'Maintenance')
+
+                            <span class="badge bg-warning text-dark">
+                                Maintenance
+                            </span>
+
+                            @else
+
+                            <span class="badge bg-secondary">
+                                {{ $inventory->status }}
+                            </span>
+
+                            @endif
+
+                        </td>
+
+                        <td>
+                            {{ $inventory->expired_date }}
+                        </td>
+
+                        <td>
+
+                            <a href="{{ route('inventories.edit',$inventory->inventory_id) }}"
+                                class="btn btn-warning btn-sm">
+
+                                <i class="bi bi-pencil-square"></i>
+
+                            </a>
+
+                            <form action="{{ route('inventories.destroy',$inventory->inventory_id) }}" method="POST"
+                                style="display:inline">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit" class="btn btn-danger btn-sm">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+
+                        <td colspan="10" class="text-center">
+
+                            Data inventory belum tersedia
+
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

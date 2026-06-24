@@ -4,113 +4,176 @@
 
 <div class="container mt-4">
 
-    <h2>Data Transaksi Inventory</h2>
+    <div class="row mb-4">
 
-    <a href="{{ route('inventory-transactions.create') }}" class="btn btn-primary mb-3">
-        Tambah Transaksi
-    </a>
+        <div class="col-md-4">
+            <div class="card bg-primary text-white border-0 shadow">
+                <div class="card-body">
+                    <h6>Total Transaksi</h6>
+                    <h3>{{ $transactions->count() }}</h3>
+                </div>
+            </div>
+        </div>
 
-    <table class="table table-bordered table-striped">
+        <div class="col-md-4">
+            <div class="card bg-success text-white border-0 shadow">
+                <div class="card-body">
+                    <h6>Total Budget</h6>
+                    <h5>
+                        Rp {{ number_format($transactions->sum('total_budget'),0,',','.') }}
+                    </h5>
+                </div>
+            </div>
+        </div>
 
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>No Transaksi</th>
-                <th>Tanggal</th>
-                <th>Jenis Transaksi</th>
-                <th>Sumber Dana</th>
-                <th>Total Budget</th>
-                <th>Realisasi</th>
-                <th>Status</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Evidence</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
+        <div class="col-md-4">
+            <div class="card bg-warning border-0 shadow">
+                <div class="card-body">
+                    <h6>Total Realisasi</h6>
+                    <h5>
+                        Rp {{ number_format($transactions->sum('budget_realization'),0,',','.') }}
+                    </h5>
+                </div>
+            </div>
+        </div>
 
-        <tbody>
+    </div>
 
-            @forelse($transactions as $trx)
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-            <tr>
+        <h2>
+            <i class="bi bi-cash-stack"></i>
+            Data Transaksi Inventory
+        </h2>
 
-                <td>{{ $loop->iteration }}</td>
+        <a href="{{ route('inventory-transactions.create') }}" class="btn btn-primary">
 
-                <td>{{ $trx->transaction_number }}</td>
+            <i class="bi bi-plus-circle"></i>
+            Tambah Transaksi
 
-                <td>{{ $trx->transaction_date }}</td>
+        </a>
 
-                <td>{{ $trx->transactionType->transaction_type_name }}</td>
+    </div>
 
-                <td>{{ $trx->source_of_funds }}</td>
+    <div class="card border-0 shadow">
 
-                <td>
-                    Rp {{ number_format($trx->total_budget,0,',','.') }}
-                </td>
+        <div class="card-body">
 
-                <td>
-                    Rp {{ number_format($trx->budget_realization,0,',','.') }}
-                </td>
+            <table class="table table-hover align-middle">
 
-                <td>{{ $trx->status }}</td>
+                <thead class="table-dark">
 
-                <td>{{ $trx->start_date }}</td>
+                    <tr>
+                        <th>No</th>
+                        <th>No Transaksi</th>
+                        <th>Jenis</th>
+                        <th>Budget</th>
+                        <th>Status</th>
+                        <th>Tanggal</th>
+                        <th width="120">Aksi</th>
+                    </tr>
 
-                <td>{{ $trx->end_date }}</td>
+                </thead>
 
-                <td>
+                <tbody>
 
-                    @if($trx->evidence_file)
+                    @forelse($transactions as $trx)
 
-                    <a href="{{ asset('storage/'.$trx->evidence_file) }}" target="_blank" class="btn btn-info btn-sm">
-                        Lihat
-                    </a>
+                    <tr>
 
-                    @else
+                        <td>{{ $loop->iteration }}</td>
 
-                    -
+                        <td>
+                            <strong>
+                                {{ $trx->transaction_number }}
+                            </strong>
+                        </td>
 
-                    @endif
+                        <td>
+                            {{ $trx->transactionType->transaction_type_name }}
+                        </td>
 
-                </td>
+                        <td>
+                            Rp {{ number_format($trx->total_budget,0,',','.') }}
+                        </td>
 
-                <td>
+                        <td>
 
-                    <a href="{{ route('inventory-transactions.edit',$trx->inventory_transaction_id) }}"
-                        class="btn btn-warning btn-sm">
-                        Edit
-                    </a>
+                            @if($trx->status == 'Draft')
 
-                    <form action="{{ route('inventory-transactions.destroy',$trx->inventory_transaction_id) }}"
-                        method="POST" style="display:inline">
+                            <span class="badge bg-secondary">
+                                Draft
+                            </span>
 
-                        @csrf
-                        @method('DELETE')
+                            @elseif($trx->status == 'Approved')
 
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            Hapus
-                        </button>
+                            <span class="badge bg-success">
+                                Approved
+                            </span>
 
-                    </form>
+                            @elseif($trx->status == 'Completed')
 
-                </td>
+                            <span class="badge bg-primary">
+                                Completed
+                            </span>
 
-            </tr>
+                            @endif
 
-            @empty
+                        </td>
 
-            <tr>
-                <td colspan="12" class="text-center">
-                    Belum ada data
-                </td>
-            </tr>
+                        <td>
+                            {{ date('d-m-Y', strtotime($trx->transaction_date)) }}
+                        </td>
 
-            @endforelse
+                        <td>
 
-        </tbody>
+                            <a href="{{ route('inventory-transactions.edit',$trx->inventory_transaction_id) }}"
+                                class="btn btn-warning btn-sm">
 
-    </table>
+                                <i class="bi bi-pencil-square"></i>
+
+                            </a>
+
+                            <form action="{{ route('inventory-transactions.destroy',$trx->inventory_transaction_id) }}"
+                                method="POST" style="display:inline">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin ingin menghapus data?')">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+
+                        <td colspan="7" class="text-center">
+
+                            Belum ada data transaksi
+
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

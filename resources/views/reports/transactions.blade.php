@@ -4,36 +4,52 @@
 
 <div class="container mt-4">
 
-    <h2>Laporan Transaksi</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <table class="table table-bordered">
+        <h2>Laporan Transaksi</h2>
 
-        <tr>
-            <th>No Transaksi</th>
-            <th>Tanggal</th>
-            <th>Jenis</th>
-            <th>Budget</th>
-        </tr>
+        <button onclick="window.print()" class="btn btn-danger">
+            🖨 Print PDF
+        </button>
 
-        @foreach($transactions as $row)
+    </div>
 
-        <tr>
+    <table class="table table-bordered table-striped">
 
-            <td>{{ $row->transaction_number }}</td>
+        <thead>
 
-            <td>{{ $row->transaction_date }}</td>
+            <tr>
+                <th>No Transaksi</th>
+                <th>Tanggal</th>
+                <th>Jenis Transaksi</th>
+                <th>Total Budget</th>
+            </tr>
 
-            <td>
-                {{ $row->transactionType->transaction_type_name }}
-            </td>
+        </thead>
 
-            <td>
-                Rp {{ number_format($row->total_budget) }}
-            </td>
+        <tbody>
 
-        </tr>
+            @foreach($transactions as $row)
 
-        @endforeach
+            <tr>
+
+                <td>{{ $row->transaction_number }}</td>
+
+                <td>{{ $row->transaction_date }}</td>
+
+                <td>
+                    {{ $row->transactionType->transaction_type_name }}
+                </td>
+
+                <td>
+                    Rp {{ number_format($row->total_budget,0,',','.') }}
+                </td>
+
+            </tr>
+
+            @endforeach
+
+        </tbody>
 
     </table>
 

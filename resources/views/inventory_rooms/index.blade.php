@@ -4,72 +4,159 @@
 
 <div class="container mt-4">
 
-    <h2>Distribusi Barang</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <a href="{{ route('inventory-rooms.create') }}" class="btn btn-primary mb-3">
-        Tambah Distribusi
-    </a>
+        <h2>
+            <i class="bi bi-diagram-3"></i>
+            Distribusi Barang
+        </h2>
 
-    <table class="table table-bordered">
+        <a href="{{ route('inventory-rooms.create') }}" class="btn btn-primary">
 
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Barang</th>
-                <th>Ruangan</th>
-                <th>Qty</th>
-                <th>Status</th>
-                <th>Tanggal</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
+            <i class="bi bi-plus-circle"></i>
+            Tambah Distribusi
 
-        <tbody>
+        </a>
 
-            @foreach($inventoryRooms as $row)
+    </div>
 
-            <tr>
+    <div class="card border-0 shadow">
 
-                <td>{{ $loop->iteration }}</td>
+        <div class="card-body">
 
-                <td>{{ $row->inventory->item->item_name }}</td>
+            <table class="table table-bordered table-hover align-middle">
 
-                <td>{{ $row->room->room_name }}</td>
+                <thead class="table-dark">
 
-                <td>{{ $row->quantity }}</td>
+                    <tr>
+                        <th width="60">No</th>
+                        <th>Barang</th>
+                        <th>Ruangan</th>
+                        <th width="100">Qty</th>
+                        <th width="120">Status</th>
+                        <th width="150">Tanggal</th>
+                        <th width="140">Aksi</th>
+                    </tr>
 
-                <td>{{ $row->status }}</td>
+                </thead>
 
-                <td>{{ $row->inventory_date }}</td>
+                <tbody>
 
-                <td>
+                    @forelse($inventoryRooms as $row)
 
-                    <a href="{{ route('inventory-rooms.edit',$row->inventory_room_id) }}"
-                        class="btn btn-warning btn-sm">
-                        Edit
-                    </a>
+                    <tr>
 
-                    <form action="{{ route('inventory-rooms.destroy',$row->inventory_room_id) }}" method="POST"
-                        style="display:inline">
+                        <td>
+                            {{ $loop->iteration }}
+                        </td>
 
-                        @csrf
-                        @method('DELETE')
+                        <td>
 
-                        <button class="btn btn-danger btn-sm">
-                            Hapus
-                        </button>
+                            <strong>
+                                {{ $row->inventory->item->item_name }}
+                            </strong>
 
-                    </form>
+                        </td>
 
-                </td>
+                        <td>
 
-            </tr>
+                            {{ $row->room->room_name }}
 
-            @endforeach
+                        </td>
 
-        </tbody>
+                        <td>
 
-    </table>
+                            <span class="badge bg-primary">
+                                {{ $row->quantity }}
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            @if($row->status == 'Active')
+
+                            <span class="badge bg-success">
+                                Active
+                            </span>
+
+                            @elseif($row->status == 'Rusak')
+
+                            <span class="badge bg-danger">
+                                Rusak
+                            </span>
+
+                            @elseif($row->status == 'Maintenance')
+
+                            <span class="badge bg-warning text-dark">
+                                Maintenance
+                            </span>
+
+                            @else
+
+                            <span class="badge bg-secondary">
+                                {{ $row->status }}
+                            </span>
+
+                            @endif
+
+                        </td>
+
+                        <td>
+
+                            {{ date('d-m-Y', strtotime($row->inventory_date)) }}
+
+                        </td>
+
+                        <td>
+
+                            <a href="{{ route('inventory-rooms.edit',$row->inventory_room_id) }}"
+                                class="btn btn-warning btn-sm">
+
+                                <i class="bi bi-pencil-square"></i>
+
+                            </a>
+
+                            <form action="{{ route('inventory-rooms.destroy',$row->inventory_room_id) }}" method="POST"
+                                style="display:inline">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin ingin menghapus data?')">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+
+                        <td colspan="7" class="text-center">
+
+                            Belum ada data distribusi barang
+
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

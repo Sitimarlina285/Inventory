@@ -4,36 +4,93 @@
 
 <div class="container mt-4">
 
-    <h2>Edit Distribusi Barang</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <form action="{{ route('inventory-rooms.update',$inventoryRoom->inventory_room_id) }}" method="POST">
+        <h2>
+            <i class="bi bi-pencil-square"></i>
+            Edit Distribusi Barang
+        </h2>
 
-        @csrf
-        @method('PUT')
+        <a href="{{ route('inventory-rooms.index') }}" class="btn btn-secondary">
 
-        <div class="mb-3">
-            <label>Quantity</label>
+            <i class="bi bi-arrow-left"></i>
+            Kembali
 
-            <input type="number" name="quantity" value="{{ $inventoryRoom->quantity }}" class="form-control">
+        </a>
+
+    </div>
+
+    <div class="card border-0 shadow">
+
+        <div class="card-body">
+
+            <form action="{{ route('inventory-rooms.update',$inventoryRoom->inventory_room_id) }}" method="POST">
+
+                @csrf
+                @method('PUT')
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-bold">
+                            Quantity
+                        </label>
+
+                        <input type="number" name="quantity" value="{{ $inventoryRoom->quantity }}" class="form-control"
+                            required>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-bold">
+                            Status
+                        </label>
+
+                        <select name="status" class="form-control">
+
+                            <option value="Active" {{ $inventoryRoom->status == 'Active' ? 'selected' : '' }}>
+                                Active
+                            </option>
+
+                            <option value="Rusak" {{ $inventoryRoom->status == 'Rusak' ? 'selected' : '' }}>
+                                Rusak
+                            </option>
+
+                            <option value="Maintenance" {{ $inventoryRoom->status == 'Maintenance' ? 'selected' : '' }}>
+                                Maintenance
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-bold">
+                        Tanggal Distribusi
+                    </label>
+
+                    <input type="date" name="inventory_date" value="{{ $inventoryRoom->inventory_date }}"
+                        class="form-control" required>
+
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+
+                    <i class="bi bi-save"></i>
+                    Update Data
+
+                </button>
+
+            </form>
+
         </div>
 
-        <div class="mb-3">
-            <label>Status</label>
-
-            <input type="text" name="status" value="{{ $inventoryRoom->status }}" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label>Tanggal</label>
-
-            <input type="date" name="inventory_date" value="{{ $inventoryRoom->inventory_date }}" class="form-control">
-        </div>
-
-        <button class="btn btn-primary">
-            Update
-        </button>
-
-    </form>
+    </div>
 
 </div>
 

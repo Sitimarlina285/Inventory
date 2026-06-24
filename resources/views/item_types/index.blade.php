@@ -2,55 +2,109 @@
 
 @section('content')
 
-<div class="container">
+<div class="container mt-4">
 
-    <h2>Item Types</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <a href="{{ route('item-types.create') }}" class="btn btn-primary mb-3">
-        Tambah Data
-    </a>
+        <h2>
+            <i class="bi bi-tags"></i>
+            Data Jenis Barang
+        </h2>
 
-    <table class="table table-bordered">
+        <a href="{{ route('item-types.create') }}" class="btn btn-primary">
 
-        <tr>
-            <th>ID</th>
-            <th>Nama</th>
-            <th>Deskripsi</th>
-            <th>Aksi</th>
-        </tr>
+            <i class="bi bi-plus-circle"></i>
+            Tambah Jenis Barang
 
-        @foreach($itemTypes as $row)
+        </a>
 
-        <tr>
-            <td>{{ $row->item_type_id }}</td>
-            <td>{{ $row->item_type_name }}</td>
-            <td>{{ $row->description }}</td>
+    </div>
 
-            <td>
+    <div class="card border-0 shadow">
 
-                <a href="{{ route('item-types.edit',$row->item_type_id) }}" class="btn btn-warning">
-                    Edit
-                </a>
+        <div class="card-body">
 
-                <form action="{{ route('item-types.destroy',$row->item_type_id) }}" method="POST"
-                    style="display:inline">
+            <table class="table table-hover align-middle">
 
-                    @csrf
-                    @method('DELETE')
+                <thead class="table-dark">
 
-                    <button class="btn btn-danger">
-                        Hapus
-                    </button>
+                    <tr>
+                        <th width="80">ID</th>
+                        <th>Nama Jenis</th>
+                        <th>Deskripsi</th>
+                        <th width="130">Aksi</th>
+                    </tr>
 
-                </form>
+                </thead>
 
-            </td>
+                <tbody>
 
-        </tr>
+                    @forelse($itemTypes as $row)
 
-        @endforeach
+                    <tr>
 
-    </table>
+                        <td>
+                            {{ $loop->iteration }}
+                        </td>
+
+                        <td>
+                            <strong>
+                                {{ $row->item_type_name }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ $row->description }}
+                        </td>
+
+                        <td>
+
+                            <a href="{{ route('item-types.edit',$row->item_type_id) }}" class="btn btn-warning btn-sm">
+
+                                <i class="bi bi-pencil-square"></i>
+
+                            </a>
+
+                            <form action="{{ route('item-types.destroy',$row->item_type_id) }}" method="POST"
+                                style="display:inline">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin ingin menghapus data ini?')">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+
+                        <td colspan="4" class="text-center">
+
+                            Data jenis barang belum tersedia
+
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 
